@@ -1,0 +1,78 @@
+{
+  "name": "My Translation",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "",
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
+  "permissions": [
+    "contextMenus"
+  ],
+  "web_accessible_resources": [
+    "img/icon16.png",
+    "img/icon48.png",
+    "img/icon128.png"
+  ],
+  "background": {
+    "scripts": [
+      "src/lib/config.js",
+      "src/background.js"
+    ],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/lib/jquery.min.js",
+        "src/lib/translate.js",
+        "src/all_urls/content.js"
+      ],
+      "css": [
+        "src/all_urls/style.css"
+      ]
+    },
+    {
+      "matches": [
+        "https://translate.google.com/*",
+        "https://translate.google.co.jp/*"
+      ],
+      "js": [
+        "src/lib/jquery.min.js",
+        "src/lib/translate.js",
+        "src/google/content.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://www.deepl.com/*"
+      ],
+      "js": [
+        "src/lib/jquery.min.js",
+        "src/lib/translate.js",
+        "src/deepl/content.js"
+      ],
+      "css": [
+        "src/deepl/style.css"
+      ]
+    },
+    {
+      "matches": [
+        "https://www.dropbox.com/*"
+      ],
+      "js": [
+        "src/lib/jquery.min.js",
+        "src/lib/translate.js",
+        "src/dropbox/content.js"
+      ],
+      "css": [
+        "src/dropbox/style.css"
+      ]
+    }
+  ]
+}

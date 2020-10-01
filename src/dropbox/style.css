@@ -1,0 +1,23 @@
+.sc-add-annotation-highlight-button {
+    display: none !important;
+}
+
+.sc-suggested-comments {
+    display: none !important;
+}
+
+.trans-item {
+    border: 2px solid #AAAAAA !important;
+    margin: 10px !important;
+}
+
+.trans-source, .trans-target {
+    font-size: 14px !important;
+    margin: 10px !important;
+}
+
+.label {
+    border: thick double #AAAAAA !important;
+    margin: 10px !important;
+    padding: 10px !important;
+}

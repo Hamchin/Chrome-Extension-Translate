@@ -1,0 +1,103 @@
+.ext-hidden {
+    display: none !important;
+}
+
+.ext-trans-btn {
+    position: absolute !important;
+    box-sizing: border-box !important;
+    background-color: #FFFFFF !important;
+    height: 27px !important;
+    width: 27px !important;
+    min-height: 27px !important;
+    min-width: 27px !important;
+    max-height: 27px !important;
+    max-width: 27px !important;
+    padding: 2px !important;
+    border: 1px solid #CCCCCC !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    z-index: 10000 !important;
+}
+
+.ext-trans-icon {
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    height: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 10000 !important;
+}
+
+.ext-trans-modal {
+    position: fixed !important;
+    box-sizing: border-box !important;
+    background-color: #FFFFFF !important;
+    box-shadow: 0 0 10px #AAAAAA !important;
+    max-height: calc(100% - 20px) !important;
+    width: 400px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    top: 10px !important;
+    right: 10px !important;
+    border: 2px solid #AAAAAA !important;
+    border-radius: 5px !important;
+    overflow-y: auto !important;
+    z-index: 10000 !important;
+}
+
+.ext-trans-item {
+    position: relative;
+    width: auto !important;
+    padding: 0 !important;
+    margin: 8px !important;
+    border: 2px solid #CCCCCC !important;
+    border-radius: 5px !important;
+    z-index: 10000 !important;
+}
+
+.ext-trans-source, .ext-trans-target {
+    font-family: sans-serif !important;
+    font-size: 16px !important;
+    color: #252525 !important;
+    margin: 8px !important;
+    z-index: 10000 !important;
+}
+
+.ext-load {
+    position: absolute !important;
+    box-sizing: content-box !important;
+    display: inline-block !important;
+    height: 1em !important;
+    width: 1em !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    top: 8px !important;
+    right: 8px !important;
+    animation: ext-cycle 1s infinite linear !important;
+}
+
+.ext-load:after {
+    content: '' !important;
+    box-sizing: border-box !important;
+    display: block !important;
+    height: 2em !important;
+    width: 2em !important;
+    transform-origin: 0 0 !important;
+    transform: translateZ(0) scale(0.5) !important;
+    backface-visibility: hidden !important;
+    border: 0.3em solid #252525 !important;
+    border-radius: 50% !important;
+    border-left-color: transparent !important;
+}
+
+@keyframes ext-cycle {
+    0% {
+        animation-timing-function: cubic-bezier(0.3333, 0.3333, 0.6667, 0.6667);
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
