@@ -43,6 +43,7 @@
     right: 10px !important;
     border: 2px solid #AAAAAA !important;
     border-radius: 5px !important;
+    overflow-x: hidden !important;
     overflow-y: auto !important;
     z-index: 10000 !important;
 }
@@ -62,6 +63,7 @@
     font-size: 16px !important;
     color: #252525 !important;
     margin: 8px !important;
+    overflow-x: hidden !important;
     z-index: 10000 !important;
 }
 
