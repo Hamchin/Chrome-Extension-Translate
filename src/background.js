@@ -20,16 +20,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-// インストールイベント
-chrome.runtime.onInstalled.addListener(() => {
-    // コンテキストメニュー: DeepL翻訳
-    chrome.contextMenus.create({
-        type: 'normal',
-        id: 'DEEPL_TRANSLATE',
-        title: 'DeepL翻訳',
-        contexts: ['selection']
-    });
-});
+// コンテキストメニュー: DeepL翻訳
+chrome.contextMenus.create({
+    type: 'normal',
+    id: 'DEEPL_TRANSLATE',
+    title: 'DeepL翻訳',
+    contexts: ['selection']
+}, () => chrome.runtime.lastError);
 
 // クリックイベント: コンテキストメニュー
 chrome.contextMenus.onClicked.addListener((info, tab) => {
