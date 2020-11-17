@@ -75,7 +75,7 @@ $(document).on('click', '.ext-trans-btn', () => {
     $(modal).data('timestamp', timestamp);
     // テキストを分割する
     const text = $(button).data('text') || '';
-    const texts = text.split('\n').filter(text => text !== '');
+    const texts = text.split('\n').map(s => s.trim()).filter(s => s !== '');
     // テンプレートを表示する
     $(modal).empty();
     $(modal).removeClass('ext-hidden');
