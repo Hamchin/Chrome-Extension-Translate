@@ -1,4 +1,4 @@
-// ロード
+// ロードイベント
 $(document).ready(() => {
     // 翻訳ボタン
     const button = $('<button>', { class: 'ext-trans-btn ext-hidden' });
@@ -21,10 +21,6 @@ $(document).on('mouseup', async () => {
     // 選択中のテキストを取得する
     const selection = window.getSelection();
     const text = selection.toString();
-    // 英字が含まれていない場合 -> キャンセル
-    if (text.match(/[\u0041-\u005A\u0061-\u007A]/g) === null) return;
-    // 日本語が含まれている場合 -> キャンセル
-    if (text.match(/[\u3040-\u31FF\u3400-\u9FFF]/g) !== null) return;
     // 翻訳ボタンを設置する
     const button = $('.ext-trans-btn');
     const selectionRects = selection.getRangeAt(0).getClientRects();
