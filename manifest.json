@@ -2,24 +2,23 @@
   "name": "My Translation",
   "version": "1.0.0",
   "manifest_version": 2,
-  "description": "",
   "icons": {
-    "16": "img/icon16.png",
-    "48": "img/icon48.png",
-    "128": "img/icon128.png"
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "permissions": [
     "contextMenus"
   ],
   "web_accessible_resources": [
-    "img/icon16.png",
-    "img/icon48.png",
-    "img/icon128.png"
+    "icons/icon16.png",
+    "icons/icon48.png",
+    "icons/icon128.png"
   ],
   "background": {
     "scripts": [
-      "src/lib/config.js",
-      "src/background.js"
+      "config/config.js",
+      "background/script.js"
     ],
     "persistent": false
   },
@@ -29,12 +28,12 @@
         "<all_urls>"
       ],
       "js": [
-        "src/lib/jquery.min.js",
-        "src/lib/translate.js",
-        "src/all_urls/content.js"
+        "vendor/jquery.min.js",
+        "utils/translate.js",
+        "scripts/all_urls/script.js"
       ],
       "css": [
-        "src/all_urls/style.css"
+        "scripts/all_urls/style.css"
       ]
     },
     {
@@ -43,9 +42,9 @@
         "https://translate.google.co.jp/*"
       ],
       "js": [
-        "src/lib/jquery.min.js",
-        "src/lib/translate.js",
-        "src/google/content.js"
+        "vendor/jquery.min.js",
+        "utils/translate.js",
+        "scripts/google/script.js"
       ]
     },
     {
@@ -53,12 +52,12 @@
         "https://www.deepl.com/*"
       ],
       "js": [
-        "src/lib/jquery.min.js",
-        "src/lib/translate.js",
-        "src/deepl/content.js"
+        "vendor/jquery.min.js",
+        "utils/translate.js",
+        "scripts/deepl/script.js"
       ],
       "css": [
-        "src/deepl/style.css"
+        "scripts/deepl/style.css"
       ]
     },
     {
@@ -66,12 +65,12 @@
         "https://www.dropbox.com/*"
       ],
       "js": [
-        "src/lib/jquery.min.js",
-        "src/lib/translate.js",
-        "src/dropbox/content.js"
+        "vendor/jquery.min.js",
+        "utils/translate.js",
+        "scripts/dropbox/script.js"
       ],
       "css": [
-        "src/dropbox/style.css"
+        "scripts/dropbox/style.css"
       ]
     }
   ]

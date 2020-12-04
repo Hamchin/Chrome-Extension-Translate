@@ -3,7 +3,7 @@ $(document).ready(() => {
     // 翻訳ボタン
     const button = $('<button>', { class: 'ext-trans-btn ext-hidden' });
     const icon = $('<div>', { class: 'ext-trans-icon' });
-    const iconUrl = chrome.extension.getURL('img/icon128.png');
+    const iconUrl = chrome.extension.getURL('icons/icon128.png');
     $(icon).css('background-image', `url(${iconUrl})`);
     $(icon).appendTo(button);
     $(button).appendTo('body');
