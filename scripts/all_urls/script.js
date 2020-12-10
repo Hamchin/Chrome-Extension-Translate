@@ -10,6 +10,7 @@ $(document).ready(() => {
     // 翻訳モーダル
     const modal = $('<div>', { class: 'ext-trans-modal ext-hidden' });
     $(modal).appendTo('body');
+    $(modal).draggable({ containment: 'window', cancel: '.ext-trans-item', scroll: false });
 });
 
 // マウスアップイベント
@@ -50,6 +51,7 @@ $(document).on('mousedown', (e) => {
         // モーダル外をクリックした場合 -> モーダルの非表示
         if ($(e.target).closest(modal).length === 0) {
             $(modal).addClass('ext-hidden');
+            $(modal).removeAttr('style');
             $(modal).empty();
         }
     }

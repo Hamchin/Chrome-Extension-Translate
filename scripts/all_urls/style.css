@@ -39,22 +39,24 @@
     width: 400px !important;
     padding: 0 !important;
     margin: 0 !important;
-    top: 10px !important;
-    right: 10px !important;
     border: 2px solid #AAAAAA !important;
     border-radius: 5px !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
+    cursor: move !important;
     z-index: 10000 !important;
+    top: 10px;
+    right: 10px;
 }
 
 .ext-trans-item {
-    position: relative;
+    position: relative !important;
     width: auto !important;
     padding: 0 !important;
     margin: 8px !important;
     border: 2px solid #CCCCCC !important;
     border-radius: 5px !important;
+    cursor: initial !important;
     z-index: 10000 !important;
 }
 

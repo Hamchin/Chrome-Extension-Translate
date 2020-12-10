@@ -2,7 +2,7 @@
 
 ## All URLs
 
-- Select text and click the button to translate English into Japanese.
+- Click the button to translate the selected text.
 
 ## Google
 
@@ -18,5 +18,5 @@
 
 ## Dropbox
 
-- Select text in PDF to translate English into Japanese.
+- Translate the selected text in the PDF.
 - Press <kbd>Enter</kbd> to enable / disable translation by taking over text.
