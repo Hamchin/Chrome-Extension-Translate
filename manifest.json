@@ -29,7 +29,7 @@
       ],
       "js": [
         "vendor/jquery.min.js",
-        "vendor/jquery-ui.js",
+        "vendor/jquery-ui.min.js",
         "utils/translator.js",
         "scripts/all_urls/script.js"
       ],
