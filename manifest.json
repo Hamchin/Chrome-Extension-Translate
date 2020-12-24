@@ -29,13 +29,14 @@
       ],
       "js": [
         "vendor/jquery.min.js",
-        "vendor/jquery-ui.min.js",
-        "utils/translate.js",
+        "vendor/jquery-ui.js",
+        "utils/translator.js",
         "scripts/all_urls/script.js"
       ],
       "css": [
         "scripts/all_urls/style.css"
-      ]
+      ],
+      "all_frames": true
     },
     {
       "matches": [
@@ -44,7 +45,7 @@
       ],
       "js": [
         "vendor/jquery.min.js",
-        "utils/translate.js",
+        "utils/translator.js",
         "scripts/google/script.js"
       ]
     },
@@ -54,7 +55,7 @@
       ],
       "js": [
         "vendor/jquery.min.js",
-        "utils/translate.js",
+        "utils/translator.js",
         "scripts/deepl/script.js"
       ],
       "css": [
@@ -67,7 +68,7 @@
       ],
       "js": [
         "vendor/jquery.min.js",
-        "utils/translate.js",
+        "utils/translator.js",
         "scripts/dropbox/script.js"
       ],
       "css": [

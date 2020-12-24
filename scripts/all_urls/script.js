@@ -1,106 +1,110 @@
-// ロードイベント
-$(document).ready(() => {
-    // 翻訳ボタン
-    const button = $('<button>', { class: 'ext-trans-btn ext-hidden' });
+// アイコンのURL
+const ICON_URL = chrome.extension.getURL('icons/icon128.png');
+
+// 翻訳ボタンを設置する
+const setTransButton = (top, left) => {
+    $('.ext-trans-btn').remove();
+    const button = $('<button>', { class: 'ext-trans-btn' });
     const icon = $('<div>', { class: 'ext-trans-icon' });
-    const iconUrl = chrome.extension.getURL('icons/icon128.png');
-    $(icon).css('background-image', `url(${iconUrl})`);
+    $(icon).css('background-image', `url(${ICON_URL})`);
     $(icon).appendTo(button);
     $(button).appendTo('body');
-    // 翻訳モーダル
-    const modal = $('<div>', { class: 'ext-trans-modal ext-hidden' });
-    $(modal).appendTo('body');
-    $(modal).draggable({ containment: 'window', cancel: '.ext-trans-item', scroll: false });
-});
+    $(button).css({ top, left });
+    return button;
+};
 
-// マウスアップイベント
-$(document).on('mouseup', async () => {
+// 翻訳モーダルを設置する
+const setTransModal = () => {
+    const initialState = { maxHeight: '', maxWidth: '' };
+    const modal = $('<div>', { class: 'ext-trans-modal' });
+    const container = $('<div>', { class: 'ext-trans-container' });
+    $(modal).append(container);
+    $(modal).appendTo('body');
+    $(modal).draggable({
+        containment: 'window',
+        cancel: '.ext-trans-text',
+        scroll: false
+    });
+    $(modal).resizable({
+        handles: 'all',
+        minHeight: 150,
+        minWidth: 200,
+        start: (e, ui) => $(modal).css({ ...ui.size, ...initialState })
+    });
+    $(modal).css({ maxHeight: '90vh', maxWidth: '80vw' });
+    return modal;
+};
+
+// マウスアップイベント: ドキュメント
+$(document).on('mouseup', async (e) => {
+    if ($(e.target).closest('.ext-trans-btn').length > 0) return;
+    if ($(e.target).closest('.ext-trans-modal').length > 0) return;
     await new Promise(resolve => setTimeout(resolve, 1));
     // 選択中のテキストを取得する
     const selection = window.getSelection();
     if (selection.toString().trim() === '') return;
     // 翻訳ボタンを設置する
-    const button = $('.ext-trans-btn');
     const selectionRects = selection.getRangeAt(0).getClientRects();
     if (selectionRects.length === 0) return;
     const lastRect = selectionRects[selectionRects.length - 1];
-    $(button).css('top', window.pageYOffset + lastRect.y + lastRect.height);
-    $(button).css('left', window.pageXOffset + lastRect.x + lastRect.width);
-    $(button).removeClass('ext-hidden');
+    const top = window.pageYOffset + lastRect.y + lastRect.height;
+    const left = window.pageXOffset + lastRect.x + lastRect.width;
+    setTransButton(top, left);
 });
 
-// マウスダウンイベント
+// マウスダウンイベント: ドキュメント
 $(document).on('mousedown', (e) => {
-    // 翻訳ボタンが存在する場合
-    const button = $('.ext-trans-btn');
-    if ($(button).hasClass('ext-hidden') === false) {
-        // ボタンをクリックした場合 -> テキストを保持する
-        if ($(e.target).closest(button).length > 0) {
-            const text = window.getSelection().toString();
-            $(button).data('text', text);
-        }
-        // ボタン外をクリックした場合 -> ボタンの非表示
-        else {
-            $(button).addClass('ext-hidden');
-            $(button).data('text', '');
-        }
+    const btnSelector = '.ext-trans-btn';
+    // 翻訳ボタンの場合 -> テキストを保持する
+    if ($(e.target).closest(btnSelector).length > 0) {
+        const text = window.getSelection().toString();
+        $(btnSelector).data('text', text);
     }
-    // 翻訳モーダルが存在する場合
-    const modal = $('.ext-trans-modal');
-    if ($(modal).hasClass('ext-hidden') === false) {
-        // モーダル外をクリックした場合 -> モーダルの非表示
-        if ($(e.target).closest(modal).length === 0) {
-            $(modal).addClass('ext-hidden');
-            $(modal).removeAttr('style');
-            $(modal).empty();
-        }
+    // 翻訳ボタン外の場合 -> ボタンを削除する
+    else {
+        $(btnSelector).remove();
     }
 });
 
 // クリックイベント: 翻訳ボタン
-$(document).on('click', '.ext-trans-btn', () => {
-    if (chrome.app === undefined) return;
-    if (chrome.app.isInstalled === undefined) return;
-    // 翻訳ボタン
-    const button = $('.ext-trans-btn');
-    setTimeout(() => $(button).addClass('ext-hidden'), 1);
-    // タイムスタンプを記録する
-    const modal = $('.ext-trans-modal');
-    const timestamp = Date.now();
-    $(modal).data('timestamp', timestamp);
+$(document).on('click', '.ext-trans-btn', (e) => {
+    // 翻訳モーダルを取得または設置する
+    const modal = document.querySelector('.ext-trans-modal') || setTransModal();
+    const container = $(modal).find('.ext-trans-container');
     // テキストを分割する
-    const text = $(button).data('text') || '';
+    const text = $(e.currentTarget).data('text') || '';
     const texts = text.split('\n').map(s => s.trim()).filter(s => s !== '');
-    // テンプレートを表示する
-    $(modal).empty();
-    $(modal).removeClass('ext-hidden');
+    e.currentTarget.remove();
+    // 各テキストを翻訳する
     texts.forEach((text) => {
+        // テンプレートを生成する
         const item = $('<div>', { class: 'ext-trans-item' });
-        $('<div>', { class: 'ext-load' }).appendTo(item);
-        $('<p>', { class: 'ext-trans-source', text: text }).appendTo(item);
-        $('<p>', { class: 'ext-trans-target', text: '' }).appendTo(item);
-        $(item).appendTo(modal);
-    });
-    $(modal).scrollTop(0);
-    // コールバック
-    const callback = (responses) => {
-        // チェック
-        if ($(modal).hasClass('ext-hidden')) return;
-        if (timestamp !== $(modal).data('timestamp')) return;
-        // 各結果を表示する
-        responses.forEach((response, i) => {
+        const source = $('<p>', { class: 'ext-trans-text', text: text });
+        const target = $('<p>', { class: 'ext-trans-text', text: '...' });
+        const load = $('<div>', { class: 'ext-trans-load' });
+        const line = $('<hr>');
+        $(item).append(source).append(line).append(target).append(load);
+        $(item).appendTo(container);
+        // 翻訳結果を反映する
+        const setResult = (response) => {
             if (response === null) return;
-            const { source, target } = response;
-            const item = $('.ext-trans-item')[i];
-            $(item).find('.ext-trans-source').text(source);
-            $(item).find('.ext-trans-target').text(target);
-        });
-    };
-    // 各テキストをGoogle翻訳する
-    translateTexts(texts, 'GOOGLE_TRANSLATE', callback);
-    // 各テキストをDeepL翻訳する
-    translateTexts(texts, 'DEEPL_TRANSLATE', (responses) => {
-        callback(responses);
-        $('.ext-trans-item').find('.ext-load').remove();
+            $(source).text(response.source);
+            $(target).text(response.target);
+        };
+        // テキストをGoogle翻訳する
+        (async (type) => {
+            const response = await translator.translateText(text, type);
+            if ($(item).find('.ext-trans-load').length === 0) return;
+            setResult(response);
+        })('GOOGLE_TRANSLATE');
+        // テキストをDeepL翻訳する
+        (async (type) => {
+            const response = await translator.translateText(text, type);
+            setResult(response);
+            $(item).find('.ext-trans-load').remove();
+        })('DEEPL_TRANSLATE');
     });
 });
+
+// ダブルクリックイベント: 翻訳モーダル -> モーダルを削除する
+$(document).on('dblclick', '.ext-trans-modal', (e) => e.currentTarget.remove());

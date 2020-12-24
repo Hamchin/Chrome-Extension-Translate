@@ -1,75 +1,66 @@
 // 状態
 const state = {
-    timestamp: 0,
     enableTakeOver: false,
     text: ''
 };
 
 // マウスアップイベント: PDF
 $(document).on('mouseup', '.pdf-viewer', async () => {
-    if (chrome.app === undefined) return;
-    if (chrome.app.isInstalled === undefined) return;
     await new Promise(resolve => setTimeout(resolve, 1));
     // 選択中のテキストを取得する
-    let text = window.getSelection().toString();
-    if (text === '') return;
-    if (state.enableTakeOver) text = state.text + ' ' + text;
-    // テキストを分割する
-    text = formatText(text);
-    if (state.enableTakeOver) state.text = text;
-    const texts = splitText(text);
+    const selectedText = window.getSelection().toString();
+    if (selectedText.trim() === '') return;
+    const mergedText = state.text + ' ' + selectedText;
+    // テキストを整形および分割する
+    const formattedText = translator.formatText(mergedText);
+    if (state.enableTakeOver) state.text = formattedText;
+    const texts = translator.splitText(formattedText);
     // テキストの数が上限以上の場合 -> キャンセル
     if (texts.length > 40) return alert('Too many sentences.');
-    // タイムスタンプを記録する
-    const timestamp = Date.now();
-    state.timestamp = timestamp;
-    // テンプレートを表示する
-    const container = $('.sc-comment-stream-threads');
-    $(container).empty();
+    // スレッドを初期化する
+    const threads = $('.sc-comment-stream-threads');
+    $(threads).empty();
+    // 各テキストを翻訳する
     texts.forEach((text) => {
+        // テンプレートを生成する
         const item = $('<li>', { class: 'trans-item' });
-        $('<p>', { class: 'trans-source', text: text }).appendTo(item);
-        $('<p>', { class: 'trans-target', text: '' }).appendTo(item);
-        $(item).appendTo(container);
-    });
-    $(container).scrollTop(0);
-    // コールバック
-    const callback = (responses) => {
-        // チェック
-        if (timestamp !== state.timestamp) return;
-        // 各結果を表示する
-        responses.forEach((response, i) => {
+        const source = $('<p>', { class: 'trans-text', text: text });
+        const target = $('<p>', { class: 'trans-text', text: '' });
+        $(item).append(source);
+        $(item).append(target);
+        $(item).appendTo(threads);
+        // 翻訳結果を反映する
+        const setResult = async (text, type) => {
+            const response = await translator.translateText(text, type);
             if (response === null) return;
-            const { source, target } = response;
-            const item = $('.trans-item')[i];
-            $(item).find('.trans-source').text(source);
-            $(item).find('.trans-target').text(target);
-        });
-    };
-    // 各テキストをGoogle翻訳する
-    translateTexts(texts, 'GOOGLE_TRANSLATE', callback);
-    // 各テキストをDeepL翻訳する
-    translateTexts(texts, 'DEEPL_TRANSLATE', callback);
+            $(source).text(response.source);
+            $(target).text(response.target);
+        };
+        // テキストをGoogle翻訳する
+        setResult(text, 'GOOGLE_TRANSLATE');
+        // テキストをDeepL翻訳する
+        setResult(text, 'DEEPL_TRANSLATE');
+    });
 });
 
-// キーダウンイベント
+// キーダウンイベント: ドキュメント
 $(document).on('keydown', (e) => {
     // フォーカスされている場合 -> キャンセル
     if ($(':focus').length > 0) return;
-    // Enterキー
-    if (e.keyCode === 13) {
-        // テキストの引き継ぎを無効化する
+    // エンターキーの場合 -> テキストの引き継ぎ設定を切り替える
+    if (e.key === 'Enter') {
+        state.enableTakeOver = !state.enableTakeOver;
+        const container = $('.sc-comment-editor-coach-mark-container');
+        // 有効の場合
         if (state.enableTakeOver) {
-            state.enableTakeOver = false;
-            $('.label').remove();
-        }
-        // テキストの引き継ぎを有効化する
-        else {
-            state.enableTakeOver = true;
             const message = 'Enable translation by taking over text.';
-            const element = $('<p>', { class: 'label', text: message });
-            $('.sc-comment-editor-coach-mark-container').append(element);
+            const label = $('<p>', { class: 'label', text: message });
+            $(container).append(label);
         }
-        state.text = '';
+        // 無効の場合
+        else {
+            state.text = '';
+            $(container).find('.label').remove();
+        }
     }
 });

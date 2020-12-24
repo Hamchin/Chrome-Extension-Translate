@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-// コンテキストメニュー: DeepL翻訳
+// コンテキストメニュー: 選択中のテキストをDeepL翻訳する
 chrome.contextMenus.create({
     type: 'normal',
     id: 'DEEPL_TRANSLATE',
