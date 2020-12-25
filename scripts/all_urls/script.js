@@ -31,7 +31,7 @@ const setTransModal = () => {
         minWidth: 200,
         start: (e, ui) => $(modal).css({ ...ui.size, ...initialState })
     });
-    $(modal).css({ maxHeight: '90vh', maxWidth: '80vw' });
+    $(modal).css({ maxHeight: '80vh', maxWidth: '80vw' });
     return modal;
 };
 

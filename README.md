@@ -19,4 +19,4 @@
 ## Dropbox
 
 - Translate the selected text in the PDF.
-- Press <kbd>Enter</kbd> to enable / disable translation by taking over text.
+- Click the button to enable / disable translation by concatenating the previous text.
