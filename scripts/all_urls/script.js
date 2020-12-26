@@ -70,13 +70,14 @@ $(document).on('mousedown', (e) => {
 $(document).on('click', '.ext-trans-btn', (e) => {
     // 翻訳モーダルを取得または設置する
     const modal = document.querySelector('.ext-trans-modal') || setTransModal();
-    const container = $(modal).find('.ext-trans-container');
+    const container = $(modal).find('.ext-trans-container').get(0);
     // テキストを分割する
     const text = $(e.currentTarget).data('text') || '';
     const texts = text.split('\n').map(s => s.trim()).filter(s => s !== '');
     e.currentTarget.remove();
     // 各テキストを翻訳する
-    texts.forEach((text) => {
+    const scrollTop = { firstItem: 0, lastTime: 0 };
+    texts.forEach((text, index) => {
         // テンプレートを生成する
         const item = $('<div>', { class: 'ext-trans-item' });
         const source = $('<p>', { class: 'ext-trans-text', text: text });
@@ -85,22 +86,34 @@ $(document).on('click', '.ext-trans-btn', (e) => {
         const line = $('<hr>');
         $(item).append(source).append(line).append(target).append(load);
         $(item).appendTo(container);
+        // 最初のアイテムにスクロールを合わせる
+        if (index === 0) scrollTop.firstItem = container.scrollTop + $(item).position().top;
+        container.scrollTop = scrollTop.firstItem;
+        scrollTop.lastTime = container.scrollTop;
         // 翻訳結果を反映する
         const setResult = (response) => {
-            if (response === null) return;
+            if (response === null) return false;
             $(source).text(response.source);
             $(target).text(response.target);
+            return true;
+        };
+        // 最初のアイテムにスクロールを合わせる
+        const setScroll = () => {
+            if (container.scrollTop !== scrollTop.lastTime) return false;
+            container.scrollTop = scrollTop.firstItem;
+            scrollTop.lastTime = container.scrollTop;
+            return true;
         };
         // テキストをGoogle翻訳する
         (async (type) => {
             const response = await translator.translateText(text, type);
             if ($(item).find('.ext-trans-load').length === 0) return;
-            setResult(response);
+            setResult(response) && setScroll();
         })('GOOGLE_TRANSLATE');
         // テキストをDeepL翻訳する
         (async (type) => {
             const response = await translator.translateText(text, type);
-            setResult(response);
+            setResult(response) && setScroll();
             $(item).find('.ext-trans-load').remove();
         })('DEEPL_TRANSLATE');
     });
