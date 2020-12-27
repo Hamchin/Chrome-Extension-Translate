@@ -8,9 +8,9 @@ const setTransButton = (top, left) => {
     const icon = $('<div>', { class: 'ext-trans-icon' });
     $(icon).css('background-image', `url(${ICON_URL})`);
     $(icon).appendTo(button);
-    $(button).appendTo('body');
     $(button).css({ top, left });
-    return button;
+    $(button).appendTo('body');
+    return $(button).get(0);
 };
 
 // 翻訳モーダルを設置する
@@ -18,8 +18,8 @@ const setTransModal = () => {
     const initialState = { maxHeight: '', maxWidth: '' };
     const modal = $('<div>', { class: 'ext-trans-modal' });
     const container = $('<div>', { class: 'ext-trans-container' });
+    const closeButton = $('<div>', { class: 'ext-close-btn', text: '×' });
     $(modal).append(container);
-    $(modal).appendTo('body');
     $(modal).draggable({
         containment: 'window',
         cancel: '.ext-trans-text',
@@ -32,7 +32,9 @@ const setTransModal = () => {
         start: (e, ui) => $(modal).css({ ...ui.size, ...initialState })
     });
     $(modal).css({ maxHeight: '80vh', maxWidth: '80vw' });
-    return modal;
+    $(modal).append(closeButton);
+    $(modal).appendTo('body');
+    return $(modal).get(0);
 };
 
 // マウスアップイベント: ドキュメント
@@ -68,13 +70,22 @@ $(document).on('mousedown', (e) => {
 
 // クリックイベント: 翻訳ボタン
 $(document).on('click', '.ext-trans-btn', (e) => {
-    // 翻訳モーダルを取得または設置する
-    const modal = document.querySelector('.ext-trans-modal') || setTransModal();
-    const container = $(modal).find('.ext-trans-container').get(0);
-    // テキストを分割する
+    // テキストを取得および分割する
     const text = $(e.currentTarget).data('text') || '';
-    const texts = text.split('\n').map(s => s.trim()).filter(s => s !== '');
+    const texts = text.split('\n').map(s => s.trim()).filter(s => s);
     e.currentTarget.remove();
+    // メッセージを送信する
+    if (texts.length === 0) return;
+    parent.postMessage({ type: 'TRANSLATE', texts: texts }, '*');
+});
+
+// メッセージイベント -> テキストを翻訳する
+window.addEventListener('message', (event) => {
+    const { type, texts } = event.data;
+    if (type !== 'TRANSLATE') return;
+    // 翻訳モーダルを取得または生成する
+    const modal = document.querySelector('.ext-trans-modal') || setTransModal();
+    const container = modal.querySelector('.ext-trans-container');
     // 各テキストを翻訳する
     const scrollTop = { firstItem: 0, lastTime: 0 };
     texts.forEach((text, index) => {
@@ -119,5 +130,7 @@ $(document).on('click', '.ext-trans-btn', (e) => {
     });
 });
 
-// ダブルクリックイベント: 翻訳モーダル -> モーダルを削除する
-$(document).on('dblclick', '.ext-trans-modal', (e) => e.currentTarget.remove());
+// クリックイベント: 閉じるボタン -> 翻訳モーダルを削除する
+$(document).on('click', '.ext-close-btn', (e) => {
+    $(e.currentTarget).closest('.ext-trans-modal').remove();
+});
