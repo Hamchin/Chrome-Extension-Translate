@@ -76,10 +76,10 @@
 
 .ext-trans-text {
     color: #252525 !important;
+    cursor: initial !important;
+    overflow-x: hidden !important;
     font-family: sans-serif !important;
     font-size: 16px !important;
-    overflow-x: hidden !important;
-    cursor: initial !important;
     margin: 8px !important;
     z-index: 10000 !important;
 }
@@ -119,6 +119,7 @@
     border-radius: 50% !important;
     text-align: center !important;
     cursor: pointer !important;
+    font-family: sans-serif !important;
     font-size: 20px !important;
     line-height: 20px !important;
     width: 20px !important;
