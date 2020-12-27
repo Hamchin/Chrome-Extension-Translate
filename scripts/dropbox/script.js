@@ -72,7 +72,7 @@ $(document).on('click', '.more-button-popover .mc-button', async () => {
     if ($(menu).length === 0) return;
     // 翻訳モード切替ボタンを設置する
     const className = 'trans-switch-btn mc-popover-content-item';
-    const message = 'Switch Translation Mode';
+    const message = '翻訳モードを切り替える';
     const button = $('<span>', { class: className, text: message });
     $(menu).append(button);
 });

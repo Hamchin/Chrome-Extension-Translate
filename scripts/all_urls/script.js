@@ -15,7 +15,7 @@ const setTransButton = (top, left) => {
 
 // 翻訳モーダルを設置する
 const setTransModal = () => {
-    const initialState = { maxHeight: '', maxWidth: '' };
+    const initialState = { maxWidth: '', maxHeight: '' };
     const modal = $('<div>', { class: 'ext-trans-modal' });
     const container = $('<div>', { class: 'ext-trans-container' });
     const closeButton = $('<div>', { class: 'ext-close-btn', text: '×' });
@@ -27,11 +27,11 @@ const setTransModal = () => {
     });
     $(modal).resizable({
         handles: 'all',
-        minHeight: 150,
-        minWidth: 200,
+        minWidth: 105,
+        minHeight: 105,
         start: (e, ui) => $(modal).css({ ...ui.size, ...initialState })
     });
-    $(modal).css({ maxHeight: '80vh', maxWidth: '80vw' });
+    $(modal).css({ maxWidth: '80vw', maxHeight: '80vh' });
     $(modal).append(closeButton);
     $(modal).appendTo('body');
     return $(modal).get(0);
