@@ -81,6 +81,7 @@ $(document).on('click', '.ext-trans-btn', (e) => {
 
 // メッセージイベント -> テキストを翻訳する
 window.addEventListener('message', (event) => {
+    if (event.data === null) return;
     const { type, texts } = event.data;
     if (type !== 'TRANSLATE') return;
     // 翻訳モーダルを取得または生成する
