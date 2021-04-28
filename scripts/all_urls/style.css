@@ -68,6 +68,7 @@
 
 .ext-trans-item hr {
     display: block !important;
+    width: auto !important;
     height: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
