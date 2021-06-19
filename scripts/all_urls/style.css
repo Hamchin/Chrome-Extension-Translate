@@ -115,18 +115,11 @@
 
 .ext-close-btn {
     position: absolute !important;
-    box-sizing: content-box !important;
     background: #FFFFFF !important;
     color: #888888 !important;
-    border: 2px solid #AAAAAA !important;
     border-radius: 50% !important;
-    text-align: center !important;
     cursor: pointer !important;
-    font-family: sans-serif !important;
-    font-size: 20px !important;
-    line-height: 20px !important;
-    width: 20px !important;
-    height: 20px !important;
+    width: 24px !important;
     top: -5px !important;
     right: -5px !important;
     z-index: 10000 !important;
