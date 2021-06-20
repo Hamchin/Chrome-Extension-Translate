@@ -1,20 +1,5 @@
-// アイコンのURL
-const ICON_URL = chrome.extension.getURL('icons/icon128.png');
-
 // 閉じるボタンのHTML
 const CLOSE_BUTTON_HTML = '<svg viewBox="0 0 512 512" class="ext-close-btn"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z"></path></svg>';
-
-// 翻訳ボタンを設置する
-const setTransButton = (top, left) => {
-    $('.ext-trans-btn').remove();
-    const button = $('<button>', { class: 'ext-trans-btn' });
-    const icon = $('<div>', { class: 'ext-trans-icon' });
-    $(icon).css('background-image', `url(${ICON_URL})`);
-    $(icon).appendTo(button);
-    $(button).css({ top, left });
-    $(button).appendTo('body');
-    return $(button).get(0);
-};
 
 // 翻訳モーダルを設置する
 const setTransModal = () => {
@@ -39,43 +24,15 @@ const setTransModal = () => {
     return $(modal).get(0);
 };
 
-// マウスアップイベント: ドキュメント
-$(document).on('mouseup', async (e) => {
-    if ($(e.target).closest('.ext-trans-btn').length > 0) return;
-    if ($(e.target).closest('.ext-trans-modal').length > 0) return;
-    await new Promise(resolve => setTimeout(resolve, 1));
-    // 選択中のテキストを取得する
-    const selection = window.getSelection();
-    if (selection.toString().trim() === '') return;
-    // 翻訳ボタンを設置する
-    const selectionRects = selection.getRangeAt(0).getClientRects();
-    if (selectionRects.length === 0) return;
-    const lastRect = selectionRects[selectionRects.length - 1];
-    const top = window.pageYOffset + lastRect.y + lastRect.height;
-    const left = window.pageXOffset + lastRect.x + lastRect.width;
-    setTransButton(top, left);
-});
-
-// マウスダウンイベント: ドキュメント
-$(document).on('mousedown', (e) => {
-    const btnSelector = '.ext-trans-btn';
-    // 翻訳ボタンの場合 -> テキストを保持する
-    if ($(e.target).closest(btnSelector).length > 0) {
-        const text = window.getSelection().toString();
-        $(btnSelector).data('text', text);
-    }
-    // 翻訳ボタン外の場合 -> ボタンを削除する
-    else {
-        $(btnSelector).remove();
-    }
-});
-
-// クリックイベント: 翻訳ボタン
-$(document).on('click', '.ext-trans-btn', (e) => {
+// キーアップイベント: ドキュメント
+$(document).on('keyup', (e) => {
+    // フォーカスしている場合 -> キャンセル
+    if ($(':focus').length > 0) return;
+    // エンターキー以外の場合 -> キャンセル
+    if (e.key !== 'Enter') return;
     // テキストを取得および分割する
-    const text = $(e.currentTarget).data('text') || '';
+    const text = window.getSelection().toString();
     const texts = text.split('\n').map(s => s.trim()).filter(s => s);
-    e.currentTarget.remove();
     // メッセージを送信する
     if (texts.length === 0) return;
     parent.postMessage({ type: 'TRANSLATE', texts: texts }, '*');

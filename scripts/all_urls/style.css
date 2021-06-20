@@ -1,33 +1,3 @@
-/* 翻訳ボタン */
-
-.ext-trans-btn {
-    position: absolute !important;
-    box-sizing: border-box !important;
-    background: #FFFFFF !important;
-    border: 1px solid #CCCCCC !important;
-    border-radius: 5px !important;
-    cursor: pointer !important;
-    min-width: 27px !important;
-    min-height: 27px !important;
-    max-width: 27px !important;
-    max-height: 27px !important;
-    width: 27px !important;
-    height: 27px !important;
-    padding: 2px !important;
-    z-index: 10000 !important;
-}
-
-.ext-trans-icon {
-    background-size: contain !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    width: 100% !important;
-    height: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    z-index: 10000 !important;
-}
-
 /* 翻訳モーダル */
 
 .ext-trans-modal {

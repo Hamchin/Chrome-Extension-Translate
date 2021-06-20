@@ -10,11 +10,6 @@
   "permissions": [
     "contextMenus"
   ],
-  "web_accessible_resources": [
-    "icons/icon16.png",
-    "icons/icon48.png",
-    "icons/icon128.png"
-  ],
   "background": {
     "scripts": [
       "config/config.js",
@@ -57,9 +52,6 @@
         "vendor/jquery.min.js",
         "utils/translator.js",
         "scripts/deepl/script.js"
-      ],
-      "css": [
-        "scripts/deepl/style.css"
       ]
     },
     {
