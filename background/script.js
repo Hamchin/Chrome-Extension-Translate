@@ -20,20 +20,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-// コンテキストメニュー: 選択中のテキストをDeepL翻訳する
+// コンテキストメニュー
 chrome.contextMenus.create({
     type: 'normal',
-    id: 'DEEPL_TRANSLATE',
-    title: 'DeepL翻訳',
+    id: 'TRANSLATE',
+    title: '選択中のテキストを翻訳する',
     contexts: ['selection']
 }, () => chrome.runtime.lastError);
 
 // クリックイベント: コンテキストメニュー
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-    // 選択中のテキストをDeepL翻訳する
-    if (info.menuItemId === 'DEEPL_TRANSLATE') {
-        const text = encodeURIComponent(info.selectionText);
-        const url = `https://www.deepl.com/translator#ja/en/${text}`;
-        window.open(url);
+    if (info.menuItemId === 'TRANSLATE') {
+        chrome.tabs.sendMessage(tab.id, 'TRANSLATE');
     }
 });

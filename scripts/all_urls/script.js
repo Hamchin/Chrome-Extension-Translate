@@ -3,7 +3,6 @@ const CLOSE_BUTTON_HTML = '<svg viewBox="0 0 512 512" class="ext-close-btn"><pat
 
 // 翻訳モーダルを設置する
 const setTransModal = () => {
-    const initialState = { maxWidth: '', maxHeight: '' };
     const modal = $('<div>', { class: 'ext-trans-modal' });
     const container = $('<div>', { class: 'ext-trans-container' });
     $(modal).append(container);
@@ -16,11 +15,12 @@ const setTransModal = () => {
         handles: 'all',
         minWidth: 105,
         minHeight: 105,
-        start: (e, ui) => $(modal).css({ ...ui.size, ...initialState })
+        start: (e, ui) => $(modal).css({ ...ui.size, maxWidth: '', maxHeight: '' })
     });
     $(modal).css({ maxWidth: '80vw', maxHeight: '80vh' });
     $(modal).append(CLOSE_BUTTON_HTML);
     $(modal).appendTo('body');
+    $(modal).find('.ext-close-btn').on('click', () => $(modal).remove());
     return $(modal).get(0);
 };
 
@@ -30,19 +30,19 @@ $(document).on('keyup', (e) => {
     if ($(':focus').length > 0) return;
     // エンターキー以外の場合 -> キャンセル
     if (e.key !== 'Enter') return;
-    // テキストを取得および分割する
+    // 選択中のテキストを翻訳する
     const text = window.getSelection().toString();
-    const texts = text.split('\n').map(s => s.trim()).filter(s => s);
-    // メッセージを送信する
-    if (texts.length === 0) return;
-    parent.postMessage({ type: 'TRANSLATE', texts: texts }, '*');
+    parent.postMessage({ type: 'TRANSLATE', text }, '*');
 });
 
 // メッセージイベント -> テキストを翻訳する
 window.addEventListener('message', (event) => {
     if (event.data === null) return;
-    const { type, texts } = event.data;
+    const { type, text } = event.data;
     if (type !== 'TRANSLATE') return;
+    // テキストを分割する
+    const texts = text.split('\n').map(s => s.trim()).filter(s => s);
+    if (texts.length === 0) return;
     // 翻訳モーダルを取得または生成する
     const modal = document.querySelector('.ext-trans-modal') || setTransModal();
     const container = modal.querySelector('.ext-trans-container');
@@ -90,7 +90,9 @@ window.addEventListener('message', (event) => {
     });
 });
 
-// クリックイベント: 閉じるボタン -> 翻訳モーダルを削除する
-$(document).on('click', '.ext-close-btn', (e) => {
-    $(e.currentTarget).closest('.ext-trans-modal').remove();
+// メッセージイベント -> 選択中のテキストを翻訳する
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message !== 'TRANSLATE') return;
+    const text = window.getSelection().toString();
+    parent.postMessage({ type: 'TRANSLATE', text }, '*');
 });
