@@ -43,36 +43,25 @@ $(document).on('mouseup', '.pdf-viewer', async () => {
     });
 });
 
-// クリックイベント: 翻訳モード切替ボタン
-$(document).on('click', '.trans-switch-btn', () => {
-    // その他ボタンをクリックする
-    $('.more-button-popover .mc-button').click();
-    // テキストの引き継ぎ設定を切り替える
-    const container = $('.sc-comment-editor-coach-mark-container');
-    if ($(container).length === 0) return;
-    const label = $(container).find('.trans-concat-enabled');
-    // ラベルが存在しない場合 -> 有効にする
-    if ($(label).length === 0) {
-        const message = 'Translate by concatenating previous text.';
-        const label = $('<p>', { class: 'trans-concat-enabled', text: message });
-        $(label).data('text', '');
-        $(label).appendTo(container);
+// キーダウンイベント: ドキュメント
+$(document).on('keydown', (e) => {
+    // フォーカスされている場合 -> キャンセル
+    if ($(':focus').length > 0) return;
+    // エンターキーの場合 -> 翻訳モードを切り替える
+    if (e.key === 'Enter') {
+        const container = $('.sc-comment-editor-coach-mark-container');
+        if ($(container).length === 0) return;
+        const label = $(container).find('.trans-concat-enabled');
+        // ラベルが存在しない場合 -> 引き継ぎを有効にする
+        if ($(label).length === 0) {
+            const message = 'Translate by concatenating previous text.';
+            const label = $('<p>', { class: 'trans-concat-enabled', text: message });
+            $(label).data('text', '');
+            $(label).appendTo(container);
+        }
+        // ラベルが存在する場合 -> 引き継ぎを無効にする
+        else {
+            $(label).remove();
+        }
     }
-    // ラベルが存在する場合 -> 無効にする
-    else {
-        $(label).remove();
-    }
-});
-
-// クリックイベント: その他ボタン
-$(document).on('click', '.more-button-popover .mc-button', async () => {
-    await new Promise(resolve => setTimeout(resolve, 1));
-    // メニューを取得する
-    const menu = $('.mc-popover-content-background');
-    if ($(menu).length === 0) return;
-    // 翻訳モード切替ボタンを設置する
-    const className = 'trans-switch-btn mc-popover-content-item';
-    const message = '翻訳モードを切り替える';
-    const button = $('<span>', { class: className, text: message });
-    $(menu).append(button);
 });
