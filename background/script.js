@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // テキストをGoogle翻訳する
     if (message.type === 'GOOGLE_TRANSLATE') {
         const url = new URL(GOOGLE_TRANSLATE_API_URL);
-        url.search = new URLSearchParams(message.data);
+        url.search = new URLSearchParams({ text: message.text });
         fetch(url.toString())
             .then(response => response.ok ? response.json() : null)
             .then(data => sendResponse(data));
@@ -14,19 +14,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const url = new URL('https://api-free.deepl.com/v2/translate');
         url.search = new URLSearchParams({
             auth_key: DEEPL_AUTH_KEY,
-            text: message.data.text,
+            text: message.text,
             target_lang: 'JA'
         });
         fetch(url.toString())
             .then(response => response.ok ? response.json() : null)
             .then(data => {
-                const source = message.data.text;
+                const source = message.text;
                 const target = data?.translations?.[0]?.text;
                 sendResponse(target ? { source, target } : null);
             });
         return true;
         // const url = new URL(DEEPL_TRANSLATE_API_URL);
-        // url.search = new URLSearchParams(message.data);
+        // url.search = new URLSearchParams({ text: message.text });
         // fetch(url.toString())
         //     .then(response => response.ok ? response.json() : null)
         //     .then(data => sendResponse(data));
@@ -37,14 +37,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // コンテキストメニュー
 chrome.contextMenus.create({
     type: 'normal',
-    id: 'TRANSLATE',
-    title: '選択中のテキストを翻訳する',
+    id: 'DEEPL_TRANSLATE',
+    title: 'DeepL翻訳',
     contexts: ['selection']
 }, () => chrome.runtime.lastError);
 
 // クリックイベント: コンテキストメニュー
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === 'TRANSLATE') {
-        chrome.tabs.sendMessage(tab.id, 'TRANSLATE');
+    // 選択中のテキストをDeepL翻訳する
+    if (info.menuItemId === 'DEEPL_TRANSLATE') {
+        const text = encodeURIComponent(info.selectionText);
+        const url = `https://www.deepl.com/translator#ja/en/${text}`;
+        window.open(url);
     }
 });

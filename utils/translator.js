@@ -25,10 +25,10 @@ translator.splitText = function (text) {
 };
 
 // テキストを翻訳する
-translator.translateText = function (text, type) {
+translator.translateText = function (type, text) {
     return new Promise((resolve) => {
         if (chrome.app?.isInstalled === undefined) resolve(null);
-        const message = { type: type, data: { text } };
+        const message = { type, text };
         chrome.runtime.sendMessage(message, data => resolve(data));
     });
 };

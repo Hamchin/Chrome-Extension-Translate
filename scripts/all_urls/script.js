@@ -77,22 +77,15 @@ window.addEventListener('message', (event) => {
         };
         // テキストをGoogle翻訳する
         (async (type) => {
-            const response = await translator.translateText(text, type);
+            const response = await translator.translateText(type, text);
             if ($(item).find('.ext-trans-load').length === 0) return;
             setResult(response) && setScroll();
         })('GOOGLE_TRANSLATE');
         // テキストをDeepL翻訳する
         (async (type) => {
-            const response = await translator.translateText(text, type);
+            const response = await translator.translateText(type, text);
             setResult(response) && setScroll();
             $(item).find('.ext-trans-load').remove();
         })('DEEPL_TRANSLATE');
     });
-});
-
-// メッセージイベント -> 選択中のテキストを翻訳する
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message !== 'TRANSLATE') return;
-    const text = window.getSelection().toString();
-    parent.postMessage({ type: 'TRANSLATE', text }, '*');
 });

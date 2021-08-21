@@ -30,16 +30,16 @@ $(document).on('mouseup', '.pdf-viewer', async () => {
         $(item).append(target);
         $(item).appendTo(threads);
         // 翻訳結果を反映する
-        const setResult = async (text, type) => {
-            const response = await translator.translateText(text, type);
+        const setResult = async (type, text) => {
+            const response = await translator.translateText(type, text);
             if (response === null) return;
             $(source).text(response.source);
             $(target).text(response.target);
         };
         // テキストをGoogle翻訳する
-        setResult(text, 'GOOGLE_TRANSLATE');
+        setResult('GOOGLE_TRANSLATE', text);
         // テキストをDeepL翻訳する
-        setResult(text, 'DEEPL_TRANSLATE');
+        setResult('DEEPL_TRANSLATE', text);
     });
 });
 
