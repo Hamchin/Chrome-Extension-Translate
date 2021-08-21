@@ -25,11 +25,11 @@ const setTransModal = () => {
 };
 
 // キーアップイベント: ドキュメント
-$(document).on('keyup', (e) => {
+$(document).on('keyup', (event) => {
     // フォーカスしている場合 -> キャンセル
     if ($(':focus').length > 0) return;
     // エンターキー以外の場合 -> キャンセル
-    if (e.key !== 'Enter') return;
+    if (event.key !== 'Enter') return;
     // 選択中のテキストを翻訳する
     const text = window.getSelection().toString();
     parent.postMessage({ type: 'TRANSLATE', text }, '*');

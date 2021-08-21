@@ -1,5 +1,5 @@
 // キーダウンイベント: ドキュメント
-$(document).on('keydown', (e) => {
+$(document).on('keydown', (event) => {
     const source = document.querySelector('textarea');
-    return translator.handleKeyDown(e, source);
+    return translator.handleKeyDown(event, source);
 });

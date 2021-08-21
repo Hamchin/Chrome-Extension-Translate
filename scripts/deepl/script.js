@@ -1,7 +1,7 @@
 // キーダウンイベント: ドキュメント
-$(document).on('keydown', (e) => {
+$(document).on('keydown', (event) => {
     const source = document.querySelector('.lmt__source_textarea');
-    return translator.handleKeyDown(e, source);
+    return translator.handleKeyDown(event, source);
 });
 
 // クリックイベント: コピーボタン -> テキストエリアへフォーカスする

@@ -44,11 +44,11 @@ $(document).on('mouseup', '.pdf-viewer', async () => {
 });
 
 // キーダウンイベント: ドキュメント
-$(document).on('keydown', (e) => {
+$(document).on('keydown', (event) => {
     // フォーカスされている場合 -> キャンセル
     if ($(':focus').length > 0) return;
     // エンターキーの場合 -> 翻訳モードを切り替える
-    if (e.key === 'Enter') {
+    if (event.key === 'Enter') {
         const container = $('.sc-comment-editor-coach-mark-container');
         if ($(container).length === 0) return;
         const label = $(container).find('.trans-concat-enabled');
