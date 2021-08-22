@@ -24,22 +24,8 @@ const setTransModal = () => {
     return $(modal).get(0);
 };
 
-// キーアップイベント: ドキュメント
-$(document).on('keyup', (event) => {
-    // フォーカスしている場合 -> キャンセル
-    if ($(':focus').length > 0) return;
-    // エンターキー以外の場合 -> キャンセル
-    if (event.key !== 'Enter') return;
-    // 選択中のテキストを翻訳する
-    const text = window.getSelection().toString();
-    parent.postMessage({ type: 'TRANSLATE', text }, '*');
-});
-
-// メッセージイベント -> テキストを翻訳する
-window.addEventListener('message', (event) => {
-    if (event.data === null) return;
-    const { type, text } = event.data;
-    if (type !== 'TRANSLATE') return;
+// テキストを翻訳する
+const translate = (text) => {
     // テキストを分割する
     const texts = text.split('\n').map(s => s.trim()).filter(s => s);
     if (texts.length === 0) return;
@@ -88,4 +74,34 @@ window.addEventListener('message', (event) => {
             $(item).find('.ext-trans-load').remove();
         })('DEEPL_TRANSLATE');
     });
+};
+
+// メッセージイベント
+window.addEventListener('message', (event) => {
+    // データが存在しない場合 -> キャンセル
+    if (event.data === null) return;
+    // テキストを翻訳する
+    if (event.data.type === 'TRANSLATE') {
+        translate(event.data.text);
+    }
+});
+
+// 直近にコピーした時間
+let lastCopyTime = null;
+
+// キーダウンイベント: ドキュメント
+document.addEventListener('keydown', (event) => {
+    // コマンドによるコピーの場合
+    if ((event.ctrlKey || event.metaKey) && event.key === 'c' && event.repeat === false) {
+        const thisCopyTime = performance.now();
+        // コピーが連続して行われなかった場合 -> コピーした時間を記録する
+        if (lastCopyTime === null || thisCopyTime - lastCopyTime > 500) {
+            lastCopyTime = thisCopyTime;
+            return;
+        }
+        // コピーが連続して行われた場合 -> 選択中のテキストを翻訳する
+        const text = window.getSelection().toString();
+        parent.postMessage({ type: 'TRANSLATE', text }, '*');
+        lastCopyTime = null;
+    }
 });
