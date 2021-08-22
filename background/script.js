@@ -2,36 +2,42 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // テキストをGoogle翻訳する
     if (message.type === 'GOOGLE_TRANSLATE') {
-        const url = new URL(GOOGLE_TRANSLATE_API_URL);
-        url.search = new URLSearchParams({ text: message.text });
-        fetch(url.toString())
-            .then(response => response.ok ? response.json() : null)
-            .then(data => sendResponse(data));
-        return true;
+        (async () => {
+            const url = new URL(GOOGLE_TRANSLATE_API_URL);
+            url.search = new URLSearchParams({ text: message.text });
+            const response = await fetch(url.toString());
+            const data = response.ok ? await response.json() : null;
+            sendResponse(data);
+        })();
     }
     // テキストをDeepL翻訳する
     if (message.type === 'DEEPL_TRANSLATE') {
-        const url = new URL('https://api-free.deepl.com/v2/translate');
-        url.search = new URLSearchParams({
-            auth_key: DEEPL_AUTH_KEY,
-            text: message.text,
-            target_lang: 'JA'
-        });
-        fetch(url.toString())
-            .then(response => response.ok ? response.json() : null)
-            .then(data => {
+        (async () => {
+            // 公式APIを利用して翻訳結果を取得する
+            let response = await (async () => {
+                const url = new URL('https://api-free.deepl.com/v2/translate');
+                url.search = new URLSearchParams({
+                    auth_key: DEEPL_AUTH_KEY,
+                    text: message.text,
+                    target_lang: 'JA'
+                });
+                const response = await fetch(url.toString());
+                const data = response.ok ? await response.json() : null;
                 const source = message.text;
                 const target = data?.translations?.[0]?.text;
-                sendResponse(target ? { source, target } : null);
-            });
-        return true;
-        // const url = new URL(DEEPL_TRANSLATE_API_URL);
-        // url.search = new URLSearchParams({ text: message.text });
-        // fetch(url.toString())
-        //     .then(response => response.ok ? response.json() : null)
-        //     .then(data => sendResponse(data));
-        // return true;
+                return target ? { source, target } : null;
+            })();
+            // 独自APIを利用して翻訳結果を取得する
+            response = response || await (async () => {
+                const url = new URL(DEEPL_TRANSLATE_API_URL);
+                url.search = new URLSearchParams({ text: message.text });
+                const response = await fetch(url.toString());
+                return response.ok ? await response.json() : null;
+            })();
+            sendResponse(response);
+        })();
     }
+    return true;
 });
 
 // コンテキストメニュー
