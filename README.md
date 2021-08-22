@@ -2,7 +2,7 @@
 
 ## All URLs
 
-- Press <kbd>Enter</kbd> to translate the selected text.
+- Press ⌘C twice to translate the selected text.
 
 ## Google
 
