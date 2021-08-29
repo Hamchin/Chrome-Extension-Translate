@@ -1,5 +1,5 @@
 {
-  "name": "My Translation",
+  "name": "Translation",
   "version": "1.0.0",
   "manifest_version": 2,
   "icons": {
@@ -25,7 +25,6 @@
       "js": [
         "vendor/jquery.min.js",
         "vendor/jquery-ui.min.js",
-        "utils/translator.js",
         "scripts/common/script.js"
       ],
       "css": [
@@ -40,7 +39,6 @@
       ],
       "js": [
         "vendor/jquery.min.js",
-        "utils/translator.js",
         "scripts/google/script.js"
       ]
     },
@@ -50,21 +48,7 @@
       ],
       "js": [
         "vendor/jquery.min.js",
-        "utils/translator.js",
         "scripts/deepl/script.js"
-      ]
-    },
-    {
-      "matches": [
-        "https://www.dropbox.com/*"
-      ],
-      "js": [
-        "vendor/jquery.min.js",
-        "utils/translator.js",
-        "scripts/dropbox/script.js"
-      ],
-      "css": [
-        "scripts/dropbox/style.css"
       ]
     }
   ]

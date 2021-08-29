@@ -2,19 +2,18 @@
 
 ## All URLs
 
-- Press ⌘C twice to translate the selected text.
+- Copy twice to translate the selected text.
 
-## Google
+## Google Drive
+
+- Copy twice for the selected text to be formatted, split into sentences, and translated.
+
+## Google Translate
 
 - Press <kbd>Enter</kbd> / <kbd>Esc</kbd> to focus / de-focus the text box.
-- Format text with <kbd>Shift</kbd> + <kbd>Enter</kbd>.
+- Click the copy button to focus on the text area.
 
 ## DeepL
 
 - Press <kbd>Enter</kbd> / <kbd>Esc</kbd> to focus / de-focus the text box.
-- Format text with <kbd>Shift</kbd> + <kbd>Enter</kbd>.
-
-## Dropbox
-
-- Translate the selected text in the PDF.
-- Press <kbd>Enter</kbd> to enable / disable translation by concatenating the previous text.
+- Click the copy button to focus on the text area.
